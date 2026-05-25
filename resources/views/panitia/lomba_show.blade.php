@@ -20,10 +20,19 @@
                     </a>
                     
                     <!-- Generate Bagan Form Button -->
+                    @php
+                        $hasStarted = $matches->whereIn('status', ['berlangsung', 'selesai'])->isNotEmpty();
+                    @endphp
                     <form method="POST" action="{{ route('panitia.lomba.generate-bagan', $lomba->id) }}">
                         @csrf
-                        <button type="submit" class="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md active:scale-95 transition-all cursor-pointer">
-                            ⚡ Generate Ulang Bagan Pertandingan
+                        <button type="submit" 
+                                @if($hasStarted) disabled @endif
+                                class="px-5 py-2 text-sm font-bold text-white rounded-xl shadow-md transition-all @if($hasStarted) bg-gray-400 cursor-not-allowed opacity-75 @else bg-blue-600 hover:bg-blue-700 active:scale-95 cursor-pointer @endif">
+                            @if($hasStarted)
+                                🔒 Bagan Sedang Berjalan / Selesai
+                            @else
+                                ⚡ Generate Ulang Bagan Pertandingan
+                            @endif
                         </button>
                     </form>
                 </div>
@@ -92,13 +101,24 @@
                             <ol class="list-decimal list-inside text-xs text-blue-800 space-y-2">
                                 @foreach ($verifiedRegs as $vReg)
                                     <li class="flex justify-between items-center gap-2">
-                                        <span class="truncate">{{ $vReg->user->name }} ({{ $vReg->user->kelas }})</span>
-                                        <form method="POST" action="{{ route('panitia.lomba.diskualifikasi', [$lomba->id, $vReg->user->id]) }}" onsubmit="return confirm('Apakah Anda yakin ingin mendiskualifikasi peserta ini dari lomba?')">
-                                            @csrf
-                                            <button type="submit" class="text-[10px] text-red-650 hover:text-red-800 font-bold hover:underline cursor-pointer flex-shrink-0">
-                                                Diskualifikasi
-                                            </button>
-                                        </form>
+                                        <span class="truncate mr-2">{{ $vReg->user->name }} ({{ $vReg->user->kelas }})</span>
+                                        <div class="flex items-center space-x-2 flex-shrink-0">
+                                            <!-- Disqualify Action -->
+                                            <form method="POST" action="{{ route('panitia.lomba.diskualifikasi', [$lomba->id, $vReg->user->id]) }}" onsubmit="return confirm('Apakah Anda yakin ingin mendiskualifikasi peserta ini?')">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] text-yellow-600 hover:text-yellow-800 font-bold hover:underline cursor-pointer">
+                                                    Dis
+                                                </button>
+                                            </form>
+                                            <span class="text-gray-300 text-[10px]">|</span>
+                                            <!-- Kick Action -->
+                                            <form method="POST" action="{{ route('panitia.lomba.kick', [$lomba->id, $vReg->user->id]) }}" onsubmit="return confirm('Apakah Anda yakin ingin meng-kick (menghapus) peserta ini dari lomba?')">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] text-red-650 hover:text-red-800 font-bold hover:underline cursor-pointer">
+                                                    Kick
+                                                </button>
+                                            </form>
+                                        </div>
                                     </li>
                                 @endforeach
                             </ol>

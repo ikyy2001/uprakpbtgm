@@ -52,148 +52,38 @@
             </div>
         </div>
 
-        <!-- Right Side: Register Form -->
+        <!-- Right Side: Administrator Notice -->
         <div class="col-span-1 md:col-span-7 p-8 sm:p-10 flex flex-col justify-center bg-white">
-            <div class="mb-6">
-                <h2 class="text-2xl font-black text-gray-900 tracking-tight">Daftarkan Kelas Baru</h2>
-                <p class="text-sm text-gray-500 mt-1">Lengkapi data di bawah ini untuk membuat akun baru.</p>
-            </div>
-
-            <form method="POST" action="{{ route('register') }}" class="space-y-4">
-                @csrf
-
-                <!-- Name -->
-                <div>
-                    <label for="name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ketua Kelas / Wali</label>
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                            👤
-                        </span>
-                        <input id="name" 
-                               type="text" 
-                               name="name" 
-                               value="{{ old('name') }}" 
-                               required 
-                               autofocus 
-                               autocomplete="name" 
-                               class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                               placeholder="Nama Lengkap">
-                    </div>
-                    <x-input-error :messages="$errors->get('name')" class="mt-1" />
+            <div class="text-center space-y-6 max-w-sm mx-auto">
+                <span class="text-5xl block animate-bounce">🏫</span>
+                
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Pendaftaran Mandiri Ditutup</h2>
+                    <p class="text-sm text-gray-500">Pembuatan akun mandiri telah dinonaktifkan oleh administrator.</p>
                 </div>
-
-                <!-- Email Address -->
-                <div>
-                    <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Email</label>
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                            📧
-                        </span>
-                        <input id="email" 
-                               type="email" 
-                               name="email" 
-                               value="{{ old('email') }}" 
-                               required 
-                               autocomplete="username" 
-                               class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                               placeholder="nama@sekolah.sch.id">
-                    </div>
-                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Nomor Induk -->
-                    <div>
-                        <label for="nomor_induk" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">NISN / Nomor Induk</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                                💳
-                            </span>
-                            <input id="nomor_induk" 
-                                   type="text" 
-                                   name="nomor_induk" 
-                                   value="{{ old('nomor_induk') }}" 
-                                   required 
-                                   class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                                   placeholder="0012345678">
-                        </div>
-                        <x-input-error :messages="$errors->get('nomor_induk')" class="mt-1" />
-                    </div>
-
-                    <!-- Kelas -->
-                    <div>
-                        <label for="kelas" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Kelas</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                                🏫
-                            </span>
-                            <input id="kelas" 
-                                   type="text" 
-                                   name="kelas" 
-                                   value="{{ old('kelas') }}" 
-                                   required 
-                                   class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                                   placeholder="XII RPL 1">
-                        </div>
-                        <x-input-error :messages="$errors->get('kelas')" class="mt-1" />
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Kata Sandi</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                                🔒
-                            </span>
-                            <input id="password" 
-                                   type="password" 
-                                   name="password" 
-                                   required 
-                                   autocomplete="new-password" 
-                                   class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                                   placeholder="••••••••">
-                        </div>
-                        <x-input-error :messages="$errors->get('password')" class="mt-1" />
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div>
-                        <label for="password_confirmation" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Konfirmasi Sandi</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 text-sm">
-                                🔒
-                            </span>
-                            <input id="password_confirmation" 
-                                   type="password" 
-                                   name="password_confirmation" 
-                                   required 
-                                   autocomplete="new-password" 
-                                   class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-[#D32F2F] transition-colors"
-                                   placeholder="••••••••">
-                        </div>
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
-                    </div>
-                </div>
-
-                <!-- Action Button -->
-                <div class="pt-2">
-                    <button type="submit" class="w-full inline-flex justify-center items-center px-6 py-3.5 border border-transparent text-sm font-bold rounded-xl text-white bg-[#D32F2F] hover:bg-red-700 hover:shadow-lg active:scale-[0.98] transition-all duration-150 cursor-pointer">
-                        Daftar Akun Baru →
-                    </button>
-                </div>
-
-                <!-- Login Link -->
-                <div class="text-center pt-2">
-                    <p class="text-sm text-gray-500">
-                        Sudah terdaftar? 
-                        <a href="{{ route('login') }}" class="font-bold text-[#3B82F6] hover:underline">
-                            Masuk ke Akun Anda
-                        </a>
+                
+                <div class="bg-red-50 border border-red-150 rounded-2xl p-5 text-left space-y-3 shadow-inner">
+                    <h4 class="font-bold text-red-800 text-sm flex items-center">
+                        <span class="mr-2">ℹ️</span> Petunjuk Pendaftaran Akun
+                    </h4>
+                    <p class="text-xs text-red-750 leading-relaxed">
+                        Untuk mendapatkan akun kelas baru, silakan menghubungi administrator **SMK PLUS PELITA NUSANTARA** atau hubungi panitia melalui email:
                     </p>
+                    <a href="mailto:info@smkpluspnb.sch.id" class="text-xs font-bold text-blue-600 hover:underline block break-all font-mono">
+                        info@smkpluspnb.sch.id
+                    </a>
                 </div>
-            </form>
+                
+                <div class="pt-4 space-y-3">
+                    <a href="{{ route('login') }}" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-sm font-bold rounded-xl text-white bg-[#D32F2F] hover:bg-red-700 hover:shadow-lg active:scale-[0.98] transition-all duration-150 cursor-pointer">
+                        Masuk ke Akun Anda
+                    </a>
+                    
+                    <a href="/" class="w-full inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-sm font-bold rounded-xl text-gray-700 bg-white hover:bg-gray-50 active:scale-[0.98] transition-all duration-150 cursor-pointer">
+                        Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>

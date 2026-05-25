@@ -128,10 +128,8 @@
                 <!-- Register Link -->
                 <div class="text-center pt-2">
                     <p class="text-sm text-gray-500">
-                        Belum memiliki akun? 
-                        <a href="{{ route('register') }}" class="font-bold text-[#3B82F6] hover:underline">
-                            Daftar Kelas Baru
-                        </a>
+                        Belum memiliki akun? <br>
+                        Hubungi administrator <strong class="font-bold text-gray-800">SMK PLUS PELITA NUSANTARA</strong> untuk pendaftaran akun.
                     </p>
                 </div>
             </form>

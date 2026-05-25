@@ -150,6 +150,16 @@ class PendaftaranController extends Controller
                 continue;
             }
 
+            // Check if the winner is STILL active (has a 'terverifikasi' registration for this lomba)
+            $isWinnerActive = \App\Models\Pendaftaran::where('user_id', $match->pemenang_id)
+                ->where('lomba_id', $match->lomba_id)
+                ->where('status', 'terverifikasi')
+                ->exists();
+
+            if (!$isWinnerActive) {
+                continue; // Skip points if the winner was kicked or disqualified from this lomba!
+            }
+
             $class = $winner->kelas;
             if (!isset($classPoints[$class])) {
                 $classPoints[$class] = [
@@ -180,15 +190,19 @@ class PendaftaranController extends Controller
             }
         }
 
-        // Urutkan berdasarkan total poin terbesar
-        $leaderboard = collect($classPoints)->sortByDesc(function ($item) {
-            return [
-                $item['points'],
-                $item['gold'],
-                $item['silver'],
-                $item['registrations_count']
-            ];
-        })->values();
+        // Urutkan berdasarkan total poin terbesar, filter kelas yang memiliki pendaftaran aktif
+        $leaderboard = collect($classPoints)
+            ->filter(function ($item) {
+                return $item['registrations_count'] > 0;
+            })
+            ->sortByDesc(function ($item) {
+                return [
+                    $item['points'],
+                    $item['gold'],
+                    $item['silver'],
+                    $item['registrations_count']
+                ];
+            })->values();
 
         return view('leaderboard', compact('leaderboard'));
     }

@@ -38,6 +38,11 @@ Route::middleware(['auth', 'role:panitia'])->group(function () {
     Route::post('/panitia/lomba/{lomba}/generate-bagan', [\App\Http\Controllers\PanitiaController::class, 'generateBagan'])->name('panitia.lomba.generate-bagan');
     Route::post('/panitia/pertandingan/{match}/set-winner', [\App\Http\Controllers\PanitiaController::class, 'setWinner'])->name('panitia.pertandingan.set-winner');
     Route::post('/panitia/lomba/{lomba}/diskualifikasi/{user}', [\App\Http\Controllers\PanitiaController::class, 'diskualifikasi'])->name('panitia.lomba.diskualifikasi');
+    Route::post('/panitia/lomba/{lomba}/kick/{user}', [\App\Http\Controllers\PanitiaController::class, 'kick'])->name('panitia.lomba.kick');
+    Route::get('/panitia/users', [\App\Http\Controllers\PanitiaController::class, 'usersIndex'])->name('panitia.users.index');
+    Route::delete('/panitia/users/{user}', [\App\Http\Controllers\PanitiaController::class, 'usersDelete'])->name('panitia.users.delete');
+    Route::get('/panitia/reset', [\App\Http\Controllers\PanitiaController::class, 'showResetForm'])->name('panitia.reset.index');
+    Route::post('/panitia/reset', [\App\Http\Controllers\PanitiaController::class, 'processReset'])->name('panitia.reset.process');
 });
 
 Route::get('/lomba/{lomba}/bagan', [\App\Http\Controllers\PendaftaranController::class, 'showBagan'])->name('lomba.bagan');

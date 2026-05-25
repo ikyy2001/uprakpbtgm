@@ -15,6 +15,14 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if(auth()->user()->role === 'panitia')
+                        <x-nav-link :href="route('panitia.users.index')" :active="request()->routeIs('panitia.users.index')">
+                            {{ __('Kelola Pengguna') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('panitia.reset.index')" :active="request()->routeIs('panitia.reset.index')">
+                            {{ __('Reset Data') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +78,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(auth()->user()->role === 'panitia')
+                <x-responsive-nav-link :href="route('panitia.users.index')" :active="request()->routeIs('panitia.users.index')">
+                    {{ __('Kelola Pengguna') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('panitia.reset.index')" :active="request()->routeIs('panitia.reset.index')">
+                    {{ __('Reset Data') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

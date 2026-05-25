@@ -92,6 +92,16 @@ class PanitiaController extends Controller
      */
     public function generateBagan(Lomba $lomba)
     {
+        // Cek apakah ada pertandingan yang sudah dimulai / selesai
+        $hasStartedMatches = Pertandingan::where('lomba_id', $lomba->id)
+            ->where('status', '!=', 'belum_mulai')
+            ->exists();
+
+        if ($hasStartedMatches) {
+            return redirect()->back()
+                ->with('error', 'Gagal generate ulang bagan. Bagan tidak dapat di-generate ulang karena perlombaan sudah berjalan atau selesai.');
+        }
+
         // Ambil semua user_id yang status pendaftarannya terverifikasi di lomba ini
         $verifiedUserIds = Pendaftaran::where('lomba_id', $lomba->id)
             ->where('status', 'terverifikasi')
@@ -148,6 +158,10 @@ class PanitiaController extends Controller
         $request->validate([
             'pemenang_id' => ['required', 'exists:users,id'],
         ]);
+
+        if ($match->status === 'selesai') {
+            return redirect()->back()->with('error', 'Pertandingan ini sudah selesai dan hasilnya bersifat final.');
+        }
 
         if ($request->pemenang_id != $match->peserta_1_id && $request->pemenang_id != $match->peserta_2_id) {
             return redirect()->back()->with('error', 'Pemenang harus salah satu dari peserta pertandingan.');
@@ -262,5 +276,112 @@ class PanitiaController extends Controller
 
         return redirect()->back()
             ->with('success', "Siswa \"{$user->name}\" berhasil didiskualifikasi dari lomba \"{$lomba->nama_lomba}\". Pertandingan aktifnya otomatis memenangkan lawan.");
+    }
+
+    /**
+     * Otoritas Panitia: Kick (hapus) peserta dari lomba secara permanen.
+     */
+    public function kick(Lomba $lomba, \App\Models\User $user)
+    {
+        // Hapus data pendaftaran
+        Pendaftaran::where('lomba_id', $lomba->id)
+            ->where('user_id', $user->id)
+            ->delete();
+
+        // Cari pertandingan aktif (belum selesai) yang diikuti oleh peserta tersebut
+        $activeMatches = Pertandingan::where('lomba_id', $lomba->id)
+            ->where('status', '!=', 'selesai')
+            ->where(function ($query) use ($user) {
+                $query->where('peserta_1_id', $user->id)
+                      ->orWhere('peserta_2_id', $user->id);
+            })
+            ->get();
+
+        foreach ($activeMatches as $match) {
+            // Tentukan lawan tandingnya
+            $opponentId = ($match->peserta_1_id == $user->id) ? $match->peserta_2_id : $match->peserta_1_id;
+
+            if ($opponentId) {
+                // Jika ada lawan, maka lawan tersebut otomatis menang
+                $match->update([
+                    'pemenang_id' => $opponentId,
+                    'status' => 'selesai',
+                ]);
+                $this->advanceWinner($match);
+            } else {
+                // Jika tidak ada lawan (misalnya bye), cukup selesaikan pertandingan
+                $match->update(['status' => 'selesai']);
+            }
+        }
+
+        return redirect()->back()
+            ->with('success', "Siswa \"{$user->name}\" berhasil di-kick dari lomba \"{$lomba->nama_lomba}\". Pertandingan aktifnya otomatis memenangkan lawan.");
+    }
+
+    /**
+     * Tampilkan Halaman Daftar Pengguna untuk Admin.
+     */
+    public function usersIndex()
+    {
+        $users = \App\Models\User::orderBy('role')->orderBy('name')->get();
+        return view('panitia.users_index', compact('users'));
+    }
+
+    /**
+     * Hapus akun pengguna secara permanen.
+     */
+    public function usersDelete(\App\Models\User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', "Akun \"{$user->name}\" berhasil dihapus secara permanen dari sistem.");
+    }
+
+    /**
+     * Tampilkan Halaman Reset Data.
+     */
+    public function showResetForm()
+    {
+        return view('panitia.reset_index');
+    }
+
+    /**
+     * Proses Reset Data berdasarkan pilihan.
+     */
+    public function processReset(Request $request)
+    {
+        $request->validate([
+            'reset_option' => ['required', 'in:bagan,skor,pendaftaran,semua'],
+            'confirm_reset' => ['required', 'accepted'],
+        ], [
+            'confirm_reset.accepted' => 'Anda harus memberikan centang persetujuan konfirmasi reset untuk melanjutkan.',
+        ]);
+
+        $option = $request->reset_option;
+
+        if ($option === 'bagan') {
+            \App\Models\Pertandingan::query()->delete();
+            $msg = 'Semua bagan pertandingan berhasil di-reset (dihapus).';
+        } elseif ($option === 'skor') {
+            \App\Models\Pertandingan::query()->update([
+                'pemenang_id' => null,
+                'status' => 'belum_mulai',
+            ]);
+            $msg = 'Semua hasil skor dan pemenang pertandingan berhasil di-reset.';
+        } elseif ($option === 'pendaftaran') {
+            \App\Models\Pendaftaran::query()->delete();
+            \App\Models\Pertandingan::query()->delete();
+            $msg = 'Semua data pendaftaran peserta dan bagan pertandingan berhasil di-reset (dihapus).';
+        } elseif ($option === 'semua') {
+            \App\Models\Pendaftaran::query()->delete();
+            \App\Models\Pertandingan::query()->delete();
+            $msg = 'Seluruh data pendaftaran, bagan pertandingan, dan papan skor berhasil di-reset ke kondisi awal.';
+        }
+
+        return redirect()->route('panitia.dashboard')->with('success', $msg);
     }
 }
