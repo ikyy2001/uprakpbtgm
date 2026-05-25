@@ -24,6 +24,12 @@
                 <a href="/#jadwal" class="text-sm font-semibold text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-white">
                     Jadwal
                 </a>
+                <a href="/#sistem" class="text-sm font-semibold text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-white">
+                    Sistem
+                </a>
+                <a href="/#panitia" class="text-sm font-semibold text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-white">
+                    Panitia
+                </a>
                 <a href="{{ route('leaderboard') }}" class="text-sm font-semibold text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-white">
                     Papan Skor (Leaderboard)
                 </a>
@@ -79,6 +85,12 @@
             </a>
             <a href="/#jadwal" class="block px-3 py-2.5 rounded-md text-base font-medium text-white hover:bg-white/10 transition-all">
                 Jadwal
+            </a>
+            <a href="/#sistem" class="block px-3 py-2.5 rounded-md text-base font-medium text-white hover:bg-white/10 transition-all">
+                Sistem
+            </a>
+            <a href="/#panitia" class="block px-3 py-2.5 rounded-md text-base font-medium text-white hover:bg-white/10 transition-all">
+                Panitia
             </a>
             <a href="{{ route('leaderboard') }}" class="block px-3 py-2.5 rounded-md text-base font-medium text-white hover:bg-white/10 transition-all">
                 Papan Skor (Leaderboard)

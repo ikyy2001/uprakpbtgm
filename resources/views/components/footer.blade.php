@@ -23,10 +23,9 @@
                     Lomba Populer
                 </h3>
                 <ul class="space-y-2">
-                    <li><a href="#lomba" class="text-sm text-red-100 hover:text-white transition-colors">Tarik Tambang</a></li>
-                    <li><a href="#lomba" class="text-sm text-red-100 hover:text-white transition-colors">Balap Karung</a></li>
-                    <li><a href="#lomba" class="text-sm text-red-100 hover:text-white transition-colors">Makan Kerupuk</a></li>
-                    <li><a href="#lomba" class="text-sm text-red-100 hover:text-white transition-colors">Panjat Pinang</a></li>
+                    @foreach(\App\Models\Lomba::take(4)->get() as $lomba)
+                        <li><a href="/#lomba" class="text-sm text-red-100 hover:text-white transition-colors">{{ $lomba->nama_lomba }}</a></li>
+                    @endforeach
                 </ul>
             </div>
 
@@ -36,10 +35,10 @@
                     Informasi
                 </h3>
                 <ul class="space-y-2">
-                    <li><a href="#jadwal" class="text-sm text-red-100 hover:text-white transition-colors">Jadwal Tanding</a></li>
-                    <li><a href="#jadwal" class="text-sm text-red-100 hover:text-white transition-colors">Klasemen Skor</a></li>
-                    <li><a href="#sistem" class="text-sm text-red-100 hover:text-white transition-colors">Sistem Penilaian</a></li>
-                    <li><a href="#faq" class="text-sm text-red-100 hover:text-white transition-colors">Pusat Bantuan</a></li>
+                    <li><a href="/#jadwal" class="text-sm text-red-100 hover:text-white transition-colors">Jadwal Tanding</a></li>
+                    <li><a href="/#jadwal" class="text-sm text-red-100 hover:text-white transition-colors">Klasemen Skor</a></li>
+                    <li><a href="/#sistem" class="text-sm text-red-100 hover:text-white transition-colors">Sistem Penilaian</a></li>
+                    <li><a href="/#faq" class="text-sm text-red-100 hover:text-white transition-colors">Pusat Bantuan</a></li>
                 </ul>
             </div>
 
@@ -49,9 +48,9 @@
                     Panitia
                 </h3>
                 <ul class="space-y-2">
-                    <li><a href="#panitia" class="text-sm text-red-100 hover:text-white transition-colors">Profil Panitia</a></li>
-                    <li><a href="#galeri" class="text-sm text-red-100 hover:text-white transition-colors">Dokumentasi</a></li>
-                    <li><a href="#kontak" class="text-sm text-red-100 hover:text-white transition-colors">Hubungi Kami</a></li>
+                    <li><a href="/#panitia" class="text-sm text-red-100 hover:text-white transition-colors">Profil Panitia</a></li>
+                    <li><a href="/#galeri" class="text-sm text-red-100 hover:text-white transition-colors">Dokumentasi</a></li>
+                    <li><a href="/#kontak" class="text-sm text-red-100 hover:text-white transition-colors">Hubungi Kami</a></li>
                 </ul>
             </div>
 
@@ -63,7 +62,7 @@
                 <p class="text-xs text-red-100/90 leading-relaxed">
                     Daftarkan kelasmu sekarang juga! Tunjukkan sportivitas dan menangkan hadiah menarik.
                 </p>
-                <a href="#daftar" class="inline-flex w-full items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-lg shadow-md active:scale-95 transition-all duration-200">
+                <a href="/#daftar" class="inline-flex w-full items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-lg shadow-md active:scale-95 transition-all duration-200">
                     Daftar Sekarang →
                 </a>
             </div>

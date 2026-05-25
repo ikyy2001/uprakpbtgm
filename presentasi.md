@@ -58,3 +58,6 @@ Desain ini terinspirasi dari aplikasi SaaS premium modern:
 1. **Pengalaman Pengguna (User Experience - UX) Lebih Mulus**: Navigasi tidak terputus karena pengguna tetap dapat mengakses menu Beranda, Jadwal, atau Leaderboard melalui navbar yang tetap tampil di atas form login/register.
 2. **Branding yang Kuat (Consistent Brand Identity)**: Identitas visual merah-putih dari RuangLomba tertanam kuat sejak awal pengguna mencoba masuk ke dalam sistem.
 3. **Tampilan Sangat Premium**: Desain dua kolom dengan gradasi, badge melayang, dan micro-interaction membuat website terasa mahal dan digarap dengan serius, jauh melampaui tampilan template standar.
+
+violets are blue
+rose are red

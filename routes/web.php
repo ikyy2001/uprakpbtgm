@@ -4,8 +4,25 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $lombas = \App\Models\Lomba::withCount(['users as jumlah_peserta' => function ($query) {
+        $query->where('pendaftarans.status', 'terverifikasi');
+    }])->get();
+
+    $matches = \App\Models\Pertandingan::with(['peserta1', 'peserta2', 'pemenang', 'lomba'])
+        ->orderBy('babak')
+        ->get();
+
+    $panitias = \App\Models\User::where('role', 'panitia')->get();
+
+    $stats = [
+        'lomba_count' => \App\Models\Lomba::count(),
+        'kelas_count' => \App\Models\User::where('role', 'peserta')->whereNotNull('kelas')->distinct('kelas')->count('kelas'),
+        'pendaftar_count' => \App\Models\Pendaftaran::where('status', 'terverifikasi')->count(),
+    ];
+
+    return view('welcome', compact('lombas', 'matches', 'panitias', 'stats'));
 });
+
 
 Route::get('/dashboard', function () {
     if (auth()->user()->role === 'panitia') {

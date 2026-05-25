@@ -49,16 +49,16 @@
                 <!-- Info Counters -->
                 <div class="grid grid-cols-3 gap-4 pt-8 border-t border-white/10 max-w-md">
                     <div>
-                        <p class="text-3xl font-black text-yellow-300">12+</p>
+                        <p class="text-3xl font-black text-yellow-300">{{ $stats['lomba_count'] }}</p>
                         <p class="text-xs text-red-100/70">Cabang Lomba</p>
                     </div>
                     <div>
-                        <p class="text-3xl font-black text-yellow-300">32</p>
+                        <p class="text-3xl font-black text-yellow-300">{{ $stats['kelas_count'] }}</p>
                         <p class="text-xs text-red-100/70">Kelas Terdaftar</p>
                     </div>
                     <div>
-                        <p class="text-3xl font-black text-yellow-300">Rp 5M+</p>
-                        <p class="text-xs text-red-100/70">Total Hadiah & Cup</p>
+                        <p class="text-3xl font-black text-yellow-300">{{ $stats['pendaftar_count'] }}</p>
+                        <p class="text-xs text-red-100/70">Peserta Terdaftar</p>
                     </div>
                 </div>
             </div>
@@ -153,6 +153,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Dynamic Lomba Grid -->
+        <div class="mt-20 border-t border-gray-100 pt-16">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-sm font-bold text-[#D32F2F] uppercase tracking-widest">Cabang Perlombaan</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">Daftar Lomba Tersedia</h3>
+                <p class="text-sm text-gray-500 mt-2">Silakan pilih dan ikuti lomba-lomba seru kemerdekaan di bawah ini.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach ($lombas as $lomba)
+                    @php
+                        $isFull = $lomba->jumlah_peserta >= $lomba->batas_kuota_maksimal;
+                    @endphp
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-red-200 hover:shadow-md transition-all duration-300 p-6 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl">🎮</span>
+                                @if ($isFull)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-150">
+                                        Penuh
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-150">
+                                        Tersedia
+                                    </span>
+                                @endif
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg leading-tight">{{ $lomba->nama_lomba }}</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">{{ $lomba->deskripsi }}</p>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-gray-50 flex items-center justify-between">
+                            <div class="text-left">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Kuota Peserta</p>
+                                <p class="text-xs font-bold text-gray-800 font-mono">{{ $lomba->jumlah_peserta }} / {{ $lomba->batas_kuota_maksimal }} Terdaftar</p>
+                            </div>
+                            <a href="{{ auth()->check() ? (auth()->user()->role === 'panitia' ? route('panitia.dashboard') : route('peserta.dashboard')) : route('register') }}" 
+                               class="inline-flex items-center justify-center px-4 py-2 text-xs font-bold rounded-lg shadow-sm active:scale-95 transition-all @if($isFull) bg-gray-150 text-gray-450 cursor-not-allowed @else bg-[#D32F2F] hover:bg-red-700 text-white @endif">
+                                @if($isFull) Detail Lomba @else Daftar Lomba @endif
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 </section>
 
@@ -239,6 +285,96 @@
                     </a>
                 </div>
             </div>
+        </div>
+
+        <!-- Dynamic Match Brackets / Schedules -->
+        <div class="mt-20 border-t border-gray-200 pt-16">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-sm font-bold text-[#D32F2F] uppercase tracking-widest">Jadwal & Bagan Pertandingan</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">Bagan Pertandingan Terkini</h3>
+                <p class="text-sm text-gray-500 mt-2">Informasi babak penyisihan hingga babak final yang diperbarui langsung dari lapangan.</p>
+            </div>
+            
+            @if ($matches->isEmpty())
+                <div class="bg-white rounded-2xl border border-gray-150 p-12 text-center max-w-xl mx-auto shadow-sm">
+                    <span class="text-4xl block mb-3">📅</span>
+                    <h4 class="font-extrabold text-gray-900 text-base">Belum Ada Pertandingan</h4>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Panitia belum mengundi bagan pertandingan. Jadwal lengkap tanding kelas akan muncul di sini segera setelah bagan di-generate oleh panitia.
+                    </p>
+                </div>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @foreach ($matches as $match)
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow flex flex-col justify-between space-y-4">
+                            <div class="flex items-center justify-between border-b border-gray-50 pb-3">
+                                <div>
+                                    <span class="text-xs font-bold text-[#D32F2F] uppercase tracking-wider font-mono">
+                                        {{ $match->lomba->nama_lomba }}
+                                    </span>
+                                    <span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700">
+                                        Babak {{ $match->babak }}
+                                    </span>
+                                </div>
+                                
+                                @if ($match->status === 'selesai')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-150">
+                                        Selesai
+                                    </span>
+                                @elseif ($match->status === 'berlangsung')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-150 animate-pulse">
+                                        Berlangsung
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-50 text-gray-600 border border-gray-150">
+                                        Belum Mulai
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <!-- Competitors -->
+                            <div class="grid grid-cols-5 gap-2 items-center text-center">
+                                <!-- Peserta 1 -->
+                                <div class="col-span-2 space-y-1">
+                                    <span class="h-10 w-10 rounded-full bg-gray-50 text-gray-700 font-bold flex items-center justify-center text-xs shadow-inner mx-auto border border-gray-150">
+                                        {{ strtoupper(substr($match->peserta1->name ?? '?', 0, 2)) }}
+                                    </span>
+                                    <p class="font-bold text-gray-900 text-xs truncate max-w-full" title="{{ $match->peserta1->name ?? 'Belum Ditentukan' }}">
+                                        {{ $match->peserta1->name ?? 'Belum Ditentukan' }}
+                                    </p>
+                                    <p class="text-[10px] text-gray-500 font-mono">Kelas {{ $match->peserta1->kelas ?? '-' }}</p>
+                                </div>
+                                
+                                <!-- VS -->
+                                <div class="col-span-1">
+                                    <span class="text-xs font-black text-gray-400 font-sans block">VS</span>
+                                    <span class="text-[9px] text-gray-300 font-mono block mt-1">Laga #{{ $match->id }}</span>
+                                </div>
+                                
+                                <!-- Peserta 2 -->
+                                <div class="col-span-2 space-y-1">
+                                    <span class="h-10 w-10 rounded-full bg-gray-50 text-gray-700 font-bold flex items-center justify-center text-xs shadow-inner mx-auto border border-gray-150">
+                                        {{ strtoupper(substr($match->peserta2->name ?? '?', 0, 2)) }}
+                                    </span>
+                                    <p class="font-bold text-gray-900 text-xs truncate max-w-full" title="{{ $match->peserta2->name ?? 'Belum Ditentukan' }}">
+                                        {{ $match->peserta2->name ?? 'TBD' }}
+                                    </p>
+                                    <p class="text-[10px] text-gray-500 font-mono">Kelas {{ $match->peserta2->kelas ?? '-' }}</p>
+                                </div>
+                            </div>
+                            
+                            @if ($match->status === 'selesai' && $match->pemenang_id)
+                                <div class="bg-green-50/50 border border-green-100 rounded-xl p-2.5 flex items-center justify-center space-x-2">
+                                    <span class="text-base">🏆</span>
+                                    <span class="text-xs font-medium text-green-800">
+                                        Pemenang: <strong class="font-bold">{{ $match->pemenang->name }}</strong> (Kelas {{ $match->pemenang->kelas }})
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 </section>
@@ -447,6 +583,56 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Panitia Section: Profil Tim Penyelenggara -->
+<section id="panitia" class="py-20 bg-white border-t border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
+        <div class="space-y-4">
+            <span class="text-sm font-bold text-[#D32F2F] uppercase tracking-widest">Panitia Pelaksana</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-gray-900">
+                Profil Tim Penyelenggara
+            </h2>
+            <p class="text-sm text-gray-500 max-w-xl mx-auto">Hubungi panitia pelaksana untuk koordinasi teknis, pertanyaan regulasi, dan konfirmasi pendaftaran.</p>
+            <div class="w-24 h-1 bg-[#D32F2F] mx-auto rounded-full"></div>
+        </div>
+
+        @if ($panitias->isEmpty())
+            <div class="bg-gray-50 rounded-2xl border border-gray-150 p-12 text-center max-w-xl mx-auto">
+                <span class="text-4xl block mb-3">👥</span>
+                <h4 class="font-extrabold text-gray-900 text-base">Belum Ada Panitia</h4>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Data panitia pelaksana belum dimasukkan ke database. Hubungi administrator kesiswaan untuk mendaftarkan akun panitia.
+                </p>
+            </div>
+        @else
+            <!-- Panitia Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
+                @foreach ($panitias as $panitia)
+                    <div class="bg-gray-50 hover:bg-red-50/20 p-6 rounded-2xl border border-gray-200 hover:border-red-200 transition-all duration-300 text-center space-y-4 shadow-sm">
+                        <!-- Avatar -->
+                        <span class="h-16 w-16 rounded-full bg-red-100 text-[#D32F2F] font-black flex items-center justify-center text-xl shadow-inner border border-red-200 mx-auto">
+                            {{ strtoupper(substr($panitia->name, 0, 2)) }}
+                        </span>
+                        
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-base leading-tight">{{ $panitia->name }}</h4>
+                            <span class="mt-1.5 inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#D32F2F] text-white">
+                                Panitia Resmi
+                            </span>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-gray-200/50 space-y-1">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider font-bold">Kontak Email</p>
+                            <a href="mailto:{{ $panitia->email }}" class="text-xs text-[#3B82F6] hover:underline font-medium break-all block">
+                                {{ $panitia->email }}
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>
 
