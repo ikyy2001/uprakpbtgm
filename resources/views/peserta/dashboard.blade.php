@@ -47,14 +47,95 @@
                 </div>
             @endif
 
+            <!-- Hero Banner Kemerdekaan (Landing Page Style) -->
+            <div class="relative bg-[#D32F2F] text-white rounded-3xl p-6 sm:p-8 overflow-hidden shadow-lg border border-red-700/30">
+                <!-- Background decorative elements -->
+                <div class="absolute inset-0 bg-gradient-to-r from-red-700/50 to-red-900/50 pointer-events-none"></div>
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/5 rounded-full filter blur-xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-60 h-60 bg-yellow-400/10 rounded-full filter blur-2xl pointer-events-none"></div>
+
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20">
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"></span>
+                            </span>
+                            <span class="text-xs font-semibold tracking-wider uppercase text-yellow-300">
+                                Edisi Kemerdekaan RI Ke-81 🇮🇩
+                            </span>
+                        </div>
+                        <h1 class="text-2xl sm:text-4xl font-black tracking-tight leading-none">
+                            Selamat Datang, <span class="text-yellow-300">{{ Auth::user()->name }}</span>!
+                        </h1>
+                        <p class="text-sm text-red-100 max-w-xl leading-relaxed">
+                            Bawa nama baik kelas <span class="font-bold text-white bg-white/20 px-2.5 py-0.5 rounded">{{ Auth::user()->kelas }}</span>! 
+                            Silakan daftarkan dirimu ke cabang lomba dan pantau status kelolamu secara real-time.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="{{ route('leaderboard') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-sm font-bold rounded-xl text-[#D32F2F] bg-white hover:bg-red-50 hover:shadow-lg active:scale-95 transition-all">
+                            🏆 Klasemen Medali
+                        </a>
+                        <a href="#riwayat" class="inline-flex items-center justify-center px-5 py-3 border border-white/30 text-sm font-bold rounded-xl text-white hover:bg-white/10 active:scale-95 transition-all">
+                            📋 Riwayat Anda
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Grid (Admin Page Style) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <!-- Stat 1: Total Pendaftaran -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Cabang Diikuti</p>
+                            <h3 class="text-2xl sm:text-3xl font-black text-gray-800 mt-1">{{ $myRegistrations->count() }}</h3>
+                        </div>
+                        <span class="text-2xl bg-gray-50 p-2.5 rounded-xl border border-gray-100">📝</span>
+                    </div>
+                </div>
+                <!-- Stat 2: Menunggu Verifikasi -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Menunggu Verifikasi</p>
+                            <h3 class="text-2xl sm:text-3xl font-black text-yellow-600 mt-1">{{ $myRegistrations->where('status', 'menunggu')->count() }}</h3>
+                        </div>
+                        <span class="text-2xl bg-yellow-50 p-2.5 rounded-xl border border-yellow-100">⏳</span>
+                    </div>
+                </div>
+                <!-- Stat 3: Disetujui -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Telah Terverifikasi</p>
+                            <h3 class="text-2xl sm:text-3xl font-black text-green-600 mt-1">{{ $myRegistrations->where('status', 'terverifikasi')->count() }}</h3>
+                        </div>
+                        <span class="text-2xl bg-green-50 p-2.5 rounded-xl border border-green-100">✅</span>
+                    </div>
+                </div>
+                <!-- Stat 4: Ditolak -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Pengajuan Ditolak</p>
+                            <h3 class="text-2xl sm:text-3xl font-black text-red-600 mt-1">{{ $myRegistrations->where('status', 'ditolak')->count() }}</h3>
+                        </div>
+                        <span class="text-2xl bg-red-50 p-2.5 rounded-xl border border-red-100">❌</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Participant Info & Registration Form Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 <!-- Profile Card (Left) -->
-                <div class="lg:col-span-5 bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6 flex flex-col justify-between">
+                <div class="lg:col-span-5 bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
                     <div>
                         <div class="flex items-center space-x-4">
-                            <span class="h-14 w-14 rounded-2xl bg-blue-50 text-blue-600 font-black flex items-center justify-center text-xl shadow-inner border border-blue-100">
+                            <span class="h-14 w-14 rounded-2xl bg-red-50 text-[#D32F2F] font-black flex items-center justify-center text-xl shadow-inner border border-red-100">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                             </span>
                             <div>
@@ -66,11 +147,11 @@
                         <div class="mt-8 space-y-4 border-t border-gray-100 pt-6">
                             <div class="flex justify-between items-center text-sm">
                                 <span class="text-gray-400">Kelas / Jurusan</span>
-                                <span class="font-bold text-gray-800 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">{{ Auth::user()->kelas }}</span>
+                                <span class="font-bold text-[#D32F2F] bg-red-50 px-3 py-1 rounded-lg border border-red-100">{{ Auth::user()->kelas }}</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
                                 <span class="text-gray-400">Status Akses</span>
-                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Siswa / Peserta</span>
+                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-red-50 text-[#D32F2F] border border-red-100">Siswa / Peserta</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
                                 <span class="text-gray-400">Email</span>
@@ -85,23 +166,26 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 text-xs text-gray-400 bg-gray-50 p-3.5 rounded-xl border border-gray-100 leading-relaxed">
-                        💡 **Petunjuk**: Setiap peserta hanya diizinkan untuk mendaftar maksimal **2 cabang lomba**. Data pendaftaran yang sudah dikirim akan diverifikasi oleh panitia.
+                    <div class="mt-8 text-xs text-red-750 bg-red-50 p-4 rounded-xl border border-red-100 leading-relaxed flex items-start space-x-2">
+                        <span class="text-sm">💡</span>
+                        <span><strong>Petunjuk</strong>: Setiap peserta hanya diizinkan untuk mendaftar maksimal <strong>2 cabang lomba</strong>. Data pendaftaran yang sudah dikirim akan diverifikasi oleh panitia.</span>
                     </div>
                 </div>
 
                 <!-- Registration Form Card (Right) -->
-                <div class="lg:col-span-7 bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6">
+                <div class="lg:col-span-7 bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
                     <div class="border-b border-gray-100 pb-4 mb-6">
-                        <h3 class="text-lg font-bold text-gray-900">Formulir Pendaftaran Lomba</h3>
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <span>📝</span> Formulir Pendaftaran Lomba
+                        </h3>
                         <p class="text-xs text-gray-500 mt-1">Pilih cabang lomba kemerdekaan yang ingin diikuti oleh Anda.</p>
                     </div>
 
                     @if ($myRegistrations->whereIn('status', ['terverifikasi', 'menunggu'])->count() >= 2)
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 text-center space-y-3">
+                        <div class="bg-red-50 border border-red-100 rounded-xl p-5 text-center space-y-3">
                             <span class="text-3xl block">🚫</span>
-                            <h4 class="font-bold text-yellow-800 text-sm">Batas Pendaftaran Tercapai</h4>
-                            <p class="text-xs text-yellow-700 leading-relaxed max-w-sm mx-auto">
+                            <h4 class="font-bold text-red-800 text-sm">Batas Pendaftaran Tercapai</h4>
+                            <p class="text-xs text-red-700 leading-relaxed max-w-sm mx-auto">
                                 Anda sudah terdaftar di 2 cabang lomba. Sesuai regulasi panitia, Anda tidak dapat mendaftar lagi kecuali membatalkan salah satu pendaftaran.
                             </p>
                         </div>
@@ -112,7 +196,7 @@
                             <!-- Cabang Lomba Dropdown -->
                             <div>
                                 <label for="lomba_id" class="block text-sm font-bold text-gray-700 mb-2">Pilih Cabang Lomba</label>
-                                <select name="lomba_id" id="lomba_id" class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-3 transition-colors" required>
+                                <select name="lomba_id" id="lomba_id" class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-[#D32F2F] focus:ring-[#D32F2F] text-sm py-3 transition-colors" required>
                                     <option value="" disabled selected>-- Pilih Cabang Lomba --</option>
                                     @foreach ($lombas as $lomba)
                                         @php
@@ -133,15 +217,15 @@
                             </div>
 
                             <!-- Description Block for selected Lomba -->
-                            <div id="lomba-details" class="bg-gray-50 border border-gray-150 rounded-xl p-4 hidden">
-                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Deskripsi Lomba:</h4>
+                            <div id="lomba-details" class="bg-red-50/40 border border-red-100 rounded-xl p-4 hidden">
+                                <h4 class="text-xs font-bold text-red-800 uppercase tracking-wider">Deskripsi Lomba:</h4>
                                 <p id="lomba-desc" class="text-xs text-gray-600 mt-1.5 leading-relaxed"></p>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="pt-2">
-                                <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md active:scale-98 transition-all cursor-pointer">
-                                    Kirim Pendaftaran 🚀
+                                <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-bold rounded-xl text-white bg-[#D32F2F] hover:bg-red-700 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer">
+                                    Kirim Pendaftaran Lomba 🚀
                                 </button>
                             </div>
                         </form>
@@ -151,9 +235,11 @@
             </div>
 
             <!-- History Table Card (Full Width) -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6">
+            <div id="riwayat" class="bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
                 <div class="border-b border-gray-100 pb-4 mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">Riwayat Pendaftaran Anda</h3>
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <span>📋</span> Riwayat Pendaftaran Anda
+                    </h3>
                     <p class="text-xs text-gray-500 mt-1">Daftar perlombaan yang Anda ajukan beserta status verifikasi terupdate.</p>
                 </div>
 
@@ -161,7 +247,7 @@
                     <div class="text-center py-12 text-gray-400 space-y-2">
                         <span class="text-4xl block">📝</span>
                         <p class="text-sm font-medium">Anda belum mendaftar di cabang lomba manapun.</p>
-                        <p class="text-xs text-gray-400">Silakan pilih lomba di atas untuk mulai berpartisipasi.</p>
+                        <p class="text-xs text-gray-450">Silakan pilih lomba di atas untuk mulai berpartisipasi.</p>
                     </div>
                 @else
                     <div class="overflow-x-auto">
@@ -186,15 +272,15 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $reg->created_at->timezone('Asia/Jakarta')->format('d M Y - H:i') }} WIB</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if ($reg->status === 'terverifikasi')
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-100">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-150">
                                                     ● Terverifikasi
                                                 </span>
                                             @elseif ($reg->status === 'menunggu')
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-50 text-yellow-700 border border-yellow-100">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-150">
                                                     ● Menunggu
                                                 </span>
                                             @else
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-100">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-150">
                                                     ● Ditolak
                                                 </span>
                                             @endif
